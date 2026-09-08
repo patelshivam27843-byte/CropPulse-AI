@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CropPulse AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <div class="brand">🌾 CropPulse <span>AI</span></div>
+  <div class="tag">Early Crop Health Warning</div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">SMART AGRICULTURE</p>
+      <h1>Detect the risk<br>before the disease spreads.</h1>
+      <p class="sub">CropPulse combines field conditions and crop information to generate an early disease-risk signal for farmers.</p>
+    </div>
+    <div class="hero-card">
+      <div class="pulse">◉</div>
+      <strong>Field Health</strong>
+      <span>Ready for analysis</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">FIELD ANALYSIS</p>
+        <h2>Enter field conditions</h2>
+      </div>
+      <span class="demo">Prototype v1</span>
+    </div>
+
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+      <div class="grid">
+        <label>Crop
+          <select name="crop">
+            <option>Tomato</option>
+            <option>Potato</option>
+            <option>Wheat</option>
+            <option>Rice</option>
+            <option>Maize</option>
+            <option>Cotton</option>
+            <option>Sugarcane</option>
+            <option>Groundnut</option>
+            <option>Soybean</option>
+            <option>Chilli</option>
+          </select>
+        </label>
+
+        <label>Crop age (days)
+          <input type="number" name="age" value="35" min="1" max="365">
+        </label>
+
+        <label>Soil moisture (%)
+          <input type="number" name="moisture" value="65" min="0" max="100">
+        </label>
+
+        <label>Irrigation
+          <select name="irrigation">
+            <option value="normal">Normal</option>
+            <option value="frequent">Frequent</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+
+        <label>Humidity (%)
+          <input type="number" name="humidity" value="78" min="0" max="100">
+        </label>
+
+        <label>Rainfall – recent (mm)
+          <input type="number" step="0.1" name="rainfall" value="20" min="0">
+        </label>
+      </div>
+
+      <label class="upload">📸 Crop / leaf photo (optional)
+        <input type="file" name="image" accept="image/*">
+      </label>
+
+      <button type="submit">Analyze Field →</button>
+    </form>
+  </section>
+
+  <section class="features">
+    <div><b>01</b><strong>Risk prediction</strong><span>Low, medium or high early-warning signal.</span></div>
+    <div><b>02</b><strong>Why?</strong><span>Shows the conditions contributing to the risk.</span></div>
+    <div><b>03</b><strong>Timeline</strong><span>See how field health is changing over time.</span></div>
+  </section>
+</main>
+</body>
+</html>

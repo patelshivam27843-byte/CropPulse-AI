@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CropPulse Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <div class="brand">🌾 CropPulse <span>AI</span></div>
+  <a class="back" href="/">← New analysis</a>
+</header>
+
+<main class="container">
+  <section class="result-top">
+    <div>
+      <p class="eyebrow">FIELD HEALTH REPORT</p>
+      <h1>{{ crop }} · Risk Analysis</h1>
+      <p class="sub">This is a prototype risk signal, not a confirmed diagnosis.</p>
+    </div>
+    <div class="risk {{ level.lower() }}">
+      <span>{{ level }}</span>
+      <b>{{ score }}%</b>
+      <small>estimated risk</small>
+    </div>
+  </section>
+
+  <section class="cards">
+    <div class="panel">
+      <p class="eyebrow">EARLY SIGNAL</p>
+      <h2>{{ disease }}</h2>
+      {% if image_name %}
+        <p class="muted">Photo received: {{ image_name }}</p>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <p class="eyebrow">WHY THIS RISK?</p>
+      {% if reasons %}
+        <ul class="reason-list">
+          {% for reason in reasons %}
+            <li>↗ {{ reason }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No strong risk factor detected.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head">
+      <div><p class="eyebrow">DISEASE TIMELINE</p><h2>Field health trend</h2></div>
+    </div>
+    <div class="timeline">
+      {% for item in timeline %}
+      <div class="time-item">
+        <div class="dot {{ item.class }}"></div>
+        <strong>{{ item.day }}</strong>
+        <span>{{ item.status }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel advice">
+    <p class="eyebrow">MANAGEMENT ADVISORY</p>
+    <h2>What to do next</h2>
+    <ul>
+      {% for item in advice %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    <p class="note">For real-world crop treatment, verify symptoms with a qualified agriculture expert and follow local guidance.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{
+  "Tomato": {
+    "high": "Early Blight / Fungal disease risk",
+    "medium": "Early Blight risk signal",
+    "advice": [
+      "Inspect lower leaves for spots and unusual discoloration.",
+      "Avoid unnecessary overhead irrigation.",
+      "Remove heavily affected plant material safely.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Potato": {
+    "high": "Late Blight risk",
+    "medium": "Late Blight risk signal",
+    "advice": [
+      "Inspect leaves regularly for new spots.",
+      "Improve field airflow where practical.",
+      "Avoid prolonged leaf wetness.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Wheat": {
+    "high": "Rust disease risk",
+    "medium": "Rust risk signal",
+    "advice": [
+      "Inspect leaves for unusual rust-colored markings.",
+      "Track weather changes and nearby reports.",
+      "Contact an agriculture expert if symptoms spread."
+    ]
+  },
+  "Rice": {
+    "high": "Rice blast disease risk",
+    "medium": "Rice blast risk signal",
+    "advice": [
+      "Inspect leaves for spindle-shaped lesions.",
+      "Avoid excessive nitrogen application.",
+      "Maintain balanced water and field management.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Maize": {
+    "high": "Fall armyworm / Leaf disease risk",
+    "medium": "Maize leaf disease risk signal",
+    "advice": [
+      "Inspect young leaves and whorls for feeding damage.",
+      "Check plants regularly during early growth.",
+      "Remove heavily affected plant material where practical.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Cotton": {
+    "high": "Cotton leaf disease / Pest risk",
+    "medium": "Cotton health risk signal",
+    "advice": [
+      "Inspect leaves and growing points for spots or pest activity.",
+      "Monitor the crop regularly after humid or rainy weather.",
+      "Keep the field well managed and avoid unnecessary irrigation.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Sugarcane": {
+    "high": "Red rot disease risk",
+    "medium": "Sugarcane disease risk signal",
+    "advice": [
+      "Inspect stalks and leaves for unusual discoloration.",
+      "Use healthy planting material.",
+      "Avoid prolonged waterlogging where possible.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Groundnut": {
+    "high": "Leaf spot disease risk",
+    "medium": "Groundnut leaf disease risk signal",
+    "advice": [
+      "Inspect lower leaves for dark or brown spots.",
+      "Monitor closely after humid and rainy periods.",
+      "Maintain suitable spacing and field airflow.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Soybean": {
+    "high": "Soybean fungal disease risk",
+    "medium": "Soybean disease risk signal",
+    "advice": [
+      "Inspect leaves for spots, yellowing, or unusual growth.",
+      "Monitor fields after extended wet weather.",
+      "Avoid unnecessary irrigation and prolonged leaf wetness.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  },
+  "Chilli": {
+    "high": "Leaf spot / Fungal disease risk",
+    "medium": "Chilli disease risk signal",
+    "advice": [
+      "Inspect leaves and fruits for spots or discoloration.",
+      "Avoid unnecessary overhead irrigation.",
+      "Remove severely affected plant material safely.",
+      "Follow local agricultural advisory before applying any treatment."
+    ]
+  }
+}
