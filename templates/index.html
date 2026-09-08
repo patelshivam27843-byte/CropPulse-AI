@@ -29,8 +29,8 @@
       </h1>
 
       <p class="sub">
-        CropPulse combines crop information and field conditions
-        to generate an early disease-risk signal for farmers.
+        CropPulse combines crop information, location and field
+        conditions to generate an early disease-risk signal for farmers.
       </p>
     </div>
 
@@ -39,6 +39,51 @@
       <strong>Field Health</strong>
       <span>Ready for analysis</span>
     </div>
+
+  </section>
+
+
+  <!-- LOCATION -->
+  <section class="panel">
+
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">FIELD LOCATION</p>
+        <h2>Detect your location</h2>
+      </div>
+
+      <span class="demo">GPS Ready</span>
+    </div>
+
+    <div class="location-box">
+
+      <div class="location-icon">📍</div>
+
+      <div class="location-content">
+
+        <strong>Use your current location</strong>
+
+        <span>
+          Location will help us provide local weather and field conditions.
+        </span>
+
+        <button
+          type="button"
+          class="location-button"
+          onclick="getLocation()">
+          📍 Use My Location
+        </button>
+
+        <div id="location-status" class="location-status">
+          Location not detected
+        </div>
+
+      </div>
+
+    </div>
+
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
 
   </section>
 
@@ -59,6 +104,11 @@
 
 
     <form action="/analyze" method="post" enctype="multipart/form-data">
+
+      <!-- LOCATION VALUES -->
+      <input type="hidden" name="latitude" id="form-latitude">
+      <input type="hidden" name="longitude" id="form-longitude">
+
 
       <div class="grid">
 
@@ -90,8 +140,7 @@
             name="age"
             value="35"
             min="1"
-            max="365"
-          >
+            max="365">
         </label>
 
 
@@ -103,8 +152,7 @@
             name="moisture"
             value="65"
             min="0"
-            max="100"
-          >
+            max="100">
         </label>
 
 
@@ -129,8 +177,7 @@
             name="humidity"
             value="78"
             min="0"
-            max="100"
-          >
+            max="100">
         </label>
 
 
@@ -142,8 +189,7 @@
             step="0.1"
             name="rainfall"
             value="20"
-            min="0"
-          >
+            min="0">
         </label>
 
       </div>
@@ -159,7 +205,7 @@
           <strong>Upload crop or leaf photo</strong>
 
           <span>
-            Add a clear photo for future AI-based crop health analysis.
+            Add a clear photo for crop health analysis.
           </span>
 
           <label class="upload-button">
@@ -170,8 +216,7 @@
               type="file"
               name="image"
               accept="image/*"
-              onchange="showFileName(this)"
-            >
+              onchange="showFileName(this)">
 
           </label>
 
@@ -229,18 +274,80 @@
 
 <script>
 
+function getLocation() {
+
+  const status = document.getElementById("location-status");
+
+  if (!navigator.geolocation) {
+
+    status.textContent =
+      "❌ Location is not supported by this browser.";
+
+    return;
+  }
+
+  status.textContent =
+    "📡 Detecting your location...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      document.getElementById("latitude").value = latitude;
+      document.getElementById("longitude").value = longitude;
+
+      document.getElementById("form-latitude").value = latitude;
+      document.getElementById("form-longitude").value = longitude;
+
+      status.textContent =
+        "✓ Location detected: " +
+        latitude.toFixed(5) +
+        ", " +
+        longitude.toFixed(5);
+
+    },
+
+    function(error) {
+
+      if (error.code === 1) {
+        status.textContent =
+          "⚠️ Location permission denied.";
+      } else {
+        status.textContent =
+          "❌ Unable to detect location.";
+      }
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+
+  );
+
+}
+
+
 function showFileName(input) {
 
-  const fileName = document.getElementById("file-name");
+  const fileName =
+    document.getElementById("file-name");
 
   if (input.files && input.files.length > 0) {
 
     fileName.textContent =
-      "✓ Photo selected: " + input.files[0].name;
+      "✓ Photo selected: " +
+      input.files[0].name;
 
   } else {
 
-    fileName.textContent = "No photo selected";
+    fileName.textContent =
+      "No photo selected";
 
   }
 
