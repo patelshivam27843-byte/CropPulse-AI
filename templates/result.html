@@ -1,79 +1,373 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CropPulse Result</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <title>CropPulse AI - Analysis Result</title>
+
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
+
 <header>
-  <div class="brand">🌾 CropPulse <span>AI</span></div>
-  <a class="back" href="/">← New analysis</a>
+  <div class="brand">
+    🌾 CropPulse <span>AI</span>
+  </div>
+
+  <a href="/" class="back">← New Analysis</a>
 </header>
 
+
 <main class="container">
-  <section class="result-top">
-    <div>
-      <p class="eyebrow">FIELD HEALTH REPORT</p>
-      <h1>{{ crop }} · Risk Analysis</h1>
-      <p class="sub">This is a prototype risk signal, not a confirmed diagnosis.</p>
-    </div>
-    <div class="risk {{ level.lower() }}">
-      <span>{{ level }}</span>
-      <b>{{ score }}%</b>
-      <small>estimated risk</small>
-    </div>
-  </section>
 
-  <section class="cards">
-    <div class="panel">
-      <p class="eyebrow">EARLY SIGNAL</p>
-      <h2>{{ disease }}</h2>
-      {% if image_name %}
-        <p class="muted">Photo received: {{ image_name }}</p>
-      {% endif %}
-    </div>
 
-    <div class="panel">
-      <p class="eyebrow">WHY THIS RISK?</p>
-      {% if reasons %}
-        <ul class="reason-list">
-          {% for reason in reasons %}
-            <li>↗ {{ reason }}</li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>No strong risk factor detected.</p>
-      {% endif %}
-    </div>
-  </section>
+  <!-- RESULT HEADER -->
 
   <section class="panel">
-    <div class="section-head">
-      <div><p class="eyebrow">DISEASE TIMELINE</p><h2>Field health trend</h2></div>
-    </div>
-    <div class="timeline">
-      {% for item in timeline %}
-      <div class="time-item">
-        <div class="dot {{ item.class }}"></div>
-        <strong>{{ item.day }}</strong>
-        <span>{{ item.status }}</span>
+
+    <div class="result-top">
+
+      <div>
+        <p class="eyebrow">FIELD ANALYSIS RESULT</p>
+
+        <h1 style="font-size:42px;letter-spacing:-1px;">
+          {{ crop }}
+        </h1>
+
+        <p class="sub">
+          Crop health assessment based on field conditions and
+          available location/weather data.
+        </p>
       </div>
-      {% endfor %}
+
+
+      <div class="risk {{ level|lower }}">
+
+        <small>RISK LEVEL</small>
+
+        <b>{{ score }}%</b>
+
+        <span>{{ level }}</span>
+
+      </div>
+
     </div>
+
   </section>
 
-  <section class="panel advice">
-    <p class="eyebrow">MANAGEMENT ADVISORY</p>
-    <h2>What to do next</h2>
-    <ul>
-      {% for item in advice %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-    <p class="note">For real-world crop treatment, verify symptoms with a qualified agriculture expert and follow local guidance.</p>
+
+
+  <!-- WEATHER -->
+
+  <section class="panel">
+
+    <div class="section-head">
+
+      <div>
+        <p class="eyebrow">LOCAL CONDITIONS</p>
+        <h2>Weather & Field Data</h2>
+      </div>
+
+      {% if latitude and longitude %}
+      <span class="demo">📍 Location detected</span>
+      {% else %}
+      <span class="demo">Manual data</span>
+      {% endif %}
+
+    </div>
+
+
+    <div class="weather-grid">
+
+
+      <div class="weather-card">
+
+        <span>🌡️</span>
+
+        <strong>
+          {% if temperature is not none %}
+            {{ temperature }}°C
+          {% else %}
+            —
+          {% endif %}
+        </strong>
+
+        <small>Temperature</small>
+
+      </div>
+
+
+      <div class="weather-card">
+
+        <span>💧</span>
+
+        <strong>
+          {{ humidity }}%
+        </strong>
+
+        <small>Humidity</small>
+
+      </div>
+
+
+      <div class="weather-card">
+
+        <span>🌧️</span>
+
+        <strong>
+          {{ rainfall }} mm
+        </strong>
+
+        <small>Recent Rainfall</small>
+
+      </div>
+
+
+      <div class="weather-card">
+
+        <span>💨</span>
+
+        <strong>
+          {% if wind_speed is not none %}
+            {{ wind_speed }} km/h
+          {% else %}
+            —
+          {% endif %}
+        </strong>
+
+        <small>Wind Speed</small>
+
+      </div>
+
+    </div>
+
+
+    {% if latitude and longitude %}
+
+    <div class="location-info">
+
+      📍 Coordinates:
+      <b>{{ "%.5f"|format(latitude|float) }}</b>,
+      <b>{{ "%.5f"|format(longitude|float) }}</b>
+
+    </div>
+
+    {% endif %}
+
   </section>
+
+
+
+  <!-- DISEASE RESULT -->
+
+  <section class="cards">
+
+
+    <div class="panel">
+
+      <p class="eyebrow">DETECTION</p>
+
+      <h2>Likely Crop Health Threat</h2>
+
+      <div class="disease-result">
+
+        <div class="disease-icon">
+          🦠
+        </div>
+
+        <div>
+
+          <strong>{{ disease }}</strong>
+
+          <p class="muted">
+            This is an early-warning result based on the
+            available field information.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="confidence-box">
+
+        <span>Risk confidence</span>
+
+        <b>{{ score }}%</b>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- PHOTO -->
+
+    <div class="panel">
+
+      <p class="eyebrow">UPLOADED IMAGE</p>
+
+      <h2>Crop Photo</h2>
+
+      {% if image_name %}
+
+      <div class="image-result">
+
+        <img
+          src="{{ url_for('static',
+                  filename='placeholder.png') }}"
+          alt="Uploaded crop photo"
+          onerror="this.style.display='none';"
+        >
+
+        <p class="muted">
+          📸 {{ image_name }}
+        </p>
+
+      </div>
+
+      {% else %}
+
+      <div class="no-image">
+        📷
+        <p>No crop photo was uploaded.</p>
+      </div>
+
+      {% endif %}
+
+    </div>
+
+  </section>
+
+
+
+  <!-- WHY -->
+
+  <section class="panel">
+
+    <p class="eyebrow">RISK FACTORS</p>
+
+    <h2>Why is this risk level shown?</h2>
+
+
+    {% if reasons %}
+
+    <ul class="reason-list">
+
+      {% for reason in reasons %}
+
+      <li>
+        <span>✓</span>
+        {{ reason }}
+      </li>
+
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+
+    <p class="muted">
+      No major risk factors were detected.
+    </p>
+
+    {% endif %}
+
+  </section>
+
+
+
+  <!-- ADVISORY -->
+
+  <section class="panel advice">
+
+    <p class="eyebrow">FARMER ADVISORY</p>
+
+    <h2>What should you do next?</h2>
+
+    {% if advice %}
+
+    <ul>
+
+      {% for item in advice %}
+
+      <li>
+        🌱 {{ item }}
+      </li>
+
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+
+    <p class="muted">
+      Follow regular crop monitoring and consult a local
+      agriculture expert if symptoms increase.
+    </p>
+
+    {% endif %}
+
+    <div class="safety-note">
+
+      ⚠️ <b>Important:</b>
+      This system provides an early-warning assessment,
+      not a confirmed diagnosis. For uncertain or severe
+      cases, consult a qualified agricultural expert before
+      taking treatment decisions.
+
+    </div>
+
+  </section>
+
+
+
+  <!-- TIMELINE -->
+
+  <section class="panel">
+
+    <p class="eyebrow">MONITORING</p>
+
+    <h2>Field Health Timeline</h2>
+
+    <div class="timeline">
+
+      {% for item in timeline %}
+
+      <div class="time-item">
+
+        <div class="dot {{ item.class }}"></div>
+
+        <strong>{{ item.day }}</strong>
+
+        <span>{{ item.status }}</span>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+
+
+  <!-- DISCLAIMER -->
+
+  <section class="note">
+
+    CropPulse AI is a decision-support prototype.
+    Weather values depend on available location-based
+    data, while disease-risk results are not a substitute
+    for professional agricultural diagnosis.
+
+  </section>
+
+
 </main>
+
 </body>
 </html>
