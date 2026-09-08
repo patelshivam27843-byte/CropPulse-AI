@@ -468,5 +468,150 @@ button:hover{
 @media(max-width:600px){
   .upload-box{
     align-items:flex-start;
+  }/* ===== RESULT PAGE ===== */
+
+.weather-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.weather-card{
+  background:#f7faf7;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.weather-card span{
+  font-size:25px;
+}
+
+.weather-card strong{
+  font-size:22px;
+}
+
+.weather-card small{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.location-info{
+  margin-top:18px;
+  padding:13px 15px;
+  border-radius:11px;
+  background:#f1f7f2;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.disease-result{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-top:20px;
+  padding:18px;
+  background:#f7faf7;
+  border:1px solid var(--line);
+  border-radius:15px;
+}
+
+.disease-icon{
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  background:var(--accent2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  flex-shrink:0;
+}
+
+.disease-result strong{
+  font-size:17px;
+}
+
+.confidence-box{
+  margin-top:15px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:#eef7f0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.confidence-box b{
+  color:var(--accent);
+  font-size:20px;
+}
+
+.image-result{
+  margin-top:18px;
+  min-height:150px;
+  border:1px dashed #b8c8bb;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:8px;
+  background:#fafcf9;
+}
+
+.no-image{
+  margin-top:18px;
+  min-height:150px;
+  border:1px dashed #b8c8bb;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  color:var(--muted);
+}
+
+.reason-list li{
+  display:flex;
+  gap:10px;
+}
+
+.reason-list li span{
+  color:var(--accent);
+  font-weight:bold;
+}
+
+.safety-note{
+  margin-top:20px;
+  padding:15px;
+  border-radius:12px;
+  background:#fff8e8;
+  color:#6b5a2a;
+  font-size:13px;
+  line-height:1.5;
+}
+
+@media(max-width:800px){
+
+  .weather-grid{
+    grid-template-columns:repeat(2,1fr);
   }
+
+}
+
+@media(max-width:600px){
+
+  .weather-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .disease-result{
+    align-items:flex-start;
+  }
+
+}
 }
