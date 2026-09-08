@@ -5,7 +5,7 @@ import urllib.request
 import urllib.parse
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "uploads"
+app.config["UPLOAD_FOLDER"] = "static/uploads"
 
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
@@ -197,20 +197,18 @@ def analyze():
 
     image = request.files.get("image")
 
-    if image and image.filename:
+   if image and image.filename:
 
-        safe_name = os.path.basename(
-            image.filename
+    safe_name = os.path.basename(image.filename)
+
+    image.save(
+        os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            safe_name
         )
+    )
 
-        image.save(
-            os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                safe_name
-            )
-        )
-
-        image_name = safe_name
+    image_name = safe_name
 
     # Calculate risk
     score, level, disease, reasons, advice = calculate_risk(
