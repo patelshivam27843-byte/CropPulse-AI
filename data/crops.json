@@ -1,0 +1,819 @@
+[
+  {
+    "name": "Rice",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      22,
+      35
+    ],
+    "rainfall_range": [
+      100,
+      300
+    ],
+    "reason": "Strong fit for warm, humid and rainy conditions."
+  },
+  {
+    "name": "Maize",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      18,
+      32
+    ],
+    "rainfall_range": [
+      40,
+      180
+    ],
+    "reason": "Suitable where moderate rainfall and warm temperatures are available."
+  },
+  {
+    "name": "Cotton",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November"
+    ],
+    "temp_range": [
+      21,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm-season crop; suitable with adequate moisture."
+  },
+  {
+    "name": "Soybean",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      20,
+      32
+    ],
+    "rainfall_range": [
+      60,
+      250
+    ],
+    "reason": "Good monsoon-season option with moderate-to-high rainfall."
+  },
+  {
+    "name": "Groundnut",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm conditions and well-drained soil are favorable."
+  },
+  {
+    "name": "Pigeonpea",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Monsoon-season pulse suited to warm conditions."
+  },
+  {
+    "name": "Chickpea",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      15,
+      30
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Cooler rabi-season option."
+  },
+  {
+    "name": "Wheat",
+    "months": [
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Rabi-season crop suited to cooler temperatures."
+  },
+  {
+    "name": "Mustard",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Cool-season oilseed option."
+  },
+  {
+    "name": "Potato",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      30,
+      120
+    ],
+    "reason": "Cool-season crop."
+  },
+  {
+    "name": "Tomato",
+    "months": [
+      "September",
+      "October",
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "temp_range": [
+      18,
+      30
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Adaptable vegetable when temperature is moderate."
+  },
+  {
+    "name": "Chilli",
+    "months": [
+      "September",
+      "October",
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "temp_range": [
+      18,
+      32
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Warm-moderate conditions are favorable."
+  },
+  {
+    "name": "Onion",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "temp_range": [
+      13,
+      30
+    ],
+    "rainfall_range": [
+      30,
+      120
+    ],
+    "reason": "Cool-to-moderate conditions are generally suitable."
+  },
+  {
+    "name": "Brinjal",
+    "months": [
+      "September",
+      "October",
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "temp_range": [
+      18,
+      32
+    ],
+    "rainfall_range": [
+      40,
+      180
+    ],
+    "reason": "Warm conditions support growth."
+  },
+  {
+    "name": "Okra",
+    "months": [
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm-season vegetable."
+  },
+  {
+    "name": "Cabbage",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      30,
+      120
+    ],
+    "reason": "Cool-season vegetable."
+  },
+  {
+    "name": "Cauliflower",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      30,
+      120
+    ],
+    "reason": "Cool-season vegetable."
+  },
+  {
+    "name": "Carrot",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Cool-season root crop."
+  },
+  {
+    "name": "Pea",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Cool-season legume."
+  },
+  {
+    "name": "Cucumber",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm-season vegetable."
+  },
+  {
+    "name": "Bitter Gourd",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm-season vegetable."
+  },
+  {
+    "name": "Bottle Gourd",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm conditions and moisture suit the crop."
+  },
+  {
+    "name": "Pumpkin",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August"
+    ],
+    "temp_range": [
+      18,
+      35
+    ],
+    "rainfall_range": [
+      40,
+      200
+    ],
+    "reason": "Warm-season crop."
+  },
+  {
+    "name": "Watermelon",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      20,
+      120
+    ],
+    "reason": "Warm, sunny conditions are preferred."
+  },
+  {
+    "name": "Muskmelon",
+    "months": [
+      "February",
+      "March",
+      "April",
+      "May"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      20,
+      120
+    ],
+    "reason": "Warm conditions are favorable."
+  },
+  {
+    "name": "Banana",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      75,
+      250
+    ],
+    "reason": "Warm climate and reliable moisture are favorable."
+  },
+  {
+    "name": "Mango",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      250
+    ],
+    "reason": "Suitable in warm fruit-growing regions."
+  },
+  {
+    "name": "Papaya",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "temp_range": [
+      21,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Warm climate crop."
+  },
+  {
+    "name": "Guava",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      50,
+      200
+    ],
+    "reason": "Adaptable warm-climate fruit."
+  },
+  {
+    "name": "Turmeric",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      100,
+      300
+    ],
+    "reason": "Warm and humid monsoon conditions suit turmeric."
+  },
+  {
+    "name": "Ginger",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      20,
+      32
+    ],
+    "rainfall_range": [
+      100,
+      300
+    ],
+    "reason": "Warm, humid conditions are favorable."
+  },
+  {
+    "name": "Sugarcane",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      75,
+      250
+    ],
+    "reason": "Long-duration warm-season crop with high water demand."
+  },
+  {
+    "name": "Jute",
+    "months": [
+      "April",
+      "May",
+      "June",
+      "July",
+      "August"
+    ],
+    "temp_range": [
+      24,
+      35
+    ],
+    "rainfall_range": [
+      100,
+      300
+    ],
+    "reason": "Warm and wet conditions are favorable."
+  },
+  {
+    "name": "Sesame",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Warm crop with moderate rainfall needs."
+  },
+  {
+    "name": "Sunflower",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      18,
+      32
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Adaptable oilseed under suitable moisture."
+  },
+  {
+    "name": "Sorghum",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      18,
+      35
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Drought-tolerant cereal option."
+  },
+  {
+    "name": "Pearl Millet",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      25,
+      38
+    ],
+    "rainfall_range": [
+      20,
+      120
+    ],
+    "reason": "Warm, relatively dry conditions are favorable."
+  },
+  {
+    "name": "Finger Millet",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "October"
+    ],
+    "temp_range": [
+      18,
+      32
+    ],
+    "rainfall_range": [
+      40,
+      150
+    ],
+    "reason": "Monsoon-season millet option."
+  },
+  {
+    "name": "Lentil",
+    "months": [
+      "October",
+      "November",
+      "December",
+      "January",
+      "February"
+    ],
+    "temp_range": [
+      10,
+      25
+    ],
+    "rainfall_range": [
+      20,
+      100
+    ],
+    "reason": "Cool rabi-season pulse."
+  },
+  {
+    "name": "Green Gram",
+    "months": [
+      "June",
+      "July",
+      "August",
+      "September",
+      "March",
+      "April"
+    ],
+    "temp_range": [
+      20,
+      35
+    ],
+    "rainfall_range": [
+      30,
+      150
+    ],
+    "reason": "Warm pulse crop suitable for short seasons."
+  }
+]
