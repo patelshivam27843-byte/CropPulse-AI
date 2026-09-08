@@ -392,3 +392,81 @@ button:hover{
     width:100%;
   }
 }
+/* Smart Photo Upload */
+
+.upload-box{
+  margin:20px 0;
+  padding:22px;
+  border:1.5px dashed #aebfb3;
+  border-radius:16px;
+  background:linear-gradient(135deg,#fafdfb,#f4f9f5);
+  display:flex;
+  align-items:center;
+  gap:18px;
+  transition:.2s;
+}
+
+.upload-box:hover{
+  border-color:var(--accent);
+  background:#f7fcf8;
+}
+
+.upload-icon{
+  width:54px;
+  height:54px;
+  border-radius:14px;
+  background:var(--accent2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  flex-shrink:0;
+}
+
+.upload-content{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.upload-content strong{
+  font-size:15px;
+}
+
+.upload-content > span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.upload-button{
+  width:max-content;
+  margin-top:7px;
+  padding:9px 14px;
+  border-radius:9px;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:800;
+}
+
+.upload-button:hover{
+  background:var(--accent-dark);
+}
+
+.upload-button input{
+  display:none;
+}
+
+.file-name{
+  color:var(--accent);
+  font-size:12px;
+  font-weight:700;
+  margin-top:2px;
+}
+
+@media(max-width:600px){
+  .upload-box{
+    align-items:flex-start;
+  }
+}
