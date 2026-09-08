@@ -1,319 +1,194 @@
-from flask import Flask, render_template, request
-import json
-import os
-import urllib.request
-import urllib.parse
+from flask import Flask, render_template, request, redirect, url_for
+import json, os, sqlite3, urllib.request, urllib.parse
+from datetime import datetime
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-
 app.config["UPLOAD_FOLDER"] = "static/uploads"
+app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-# Disease database
+DB = "croppulse.db"
+
+with open("data/crops.json", "r", encoding="utf-8") as f:
+    CROPS = json.load(f)
 with open("data/diseases.json", "r", encoding="utf-8") as f:
     DISEASES = json.load(f)
 
+def db():
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
+    return con
 
-# ---------------- WEATHER ----------------
+def init_db():
+    con = db()
+    con.execute("""CREATE TABLE IF NOT EXISTS history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        created_at TEXT, crop TEXT, disease TEXT, level TEXT,
+        score INTEGER, confidence TEXT, latitude REAL, longitude REAL
+    )""")
+    con.commit()
+    con.close()
 
-def get_weather(latitude, longitude):
+init_db()
 
+def get_weather(lat, lon):
     try:
         params = urllib.parse.urlencode({
-            "latitude": latitude,
-            "longitude": longitude,
-            "current": (
-                "temperature_2m,"
-                "relative_humidity_2m,"
-                "precipitation,"
-                "wind_speed_10m"
-            ),
-            "daily": (
-                "temperature_2m_max,"
-                "temperature_2m_min,"
-                "precipitation_sum"
-            ),
-            "forecast_days": 1,
-            "timezone": "auto"
+            "latitude": lat, "longitude": lon,
+            "current": "temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,soil_moisture_0_to_7cm",
+            "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum",
+            "forecast_days": 1, "timezone": "auto"
         })
-
-        url = "https://api.open-meteo.com/v1/forecast?" + params
-
-        with urllib.request.urlopen(url, timeout=10) as response:
-            data = json.loads(response.read().decode("utf-8"))
-
-        current = data.get("current", {})
-        daily = data.get("daily", {})
-
+        with urllib.request.urlopen(
+            "https://api.open-meteo.com/v1/forecast?" + params, timeout=10
+        ) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        c, d = data.get("current", {}), data.get("daily", {})
+        soil = c.get("soil_moisture_0_to_7cm")
         return {
-            "temperature": current.get("temperature_2m"),
-            "humidity": current.get("relative_humidity_2m"),
-            "rainfall": current.get("precipitation", 0),
-            "wind_speed": current.get("wind_speed_10m"),
-            "max_temp": daily.get("temperature_2m_max", [None])[0],
-            "min_temp": daily.get("temperature_2m_min", [None])[0],
-            "daily_rainfall": daily.get("precipitation_sum", [0])[0]
+            "temperature": c.get("temperature_2m"),
+            "humidity": c.get("relative_humidity_2m"),
+            "rainfall": c.get("precipitation") or 0,
+            "daily_rainfall": (d.get("precipitation_sum") or [0])[0] or 0,
+            "wind_speed": c.get("wind_speed_10m"),
+            "soil_moisture": soil,
+            "soil_moisture_note": "Estimated model value"
         }
-
     except Exception as e:
-        print("Weather Error:", e)
+        print("Weather error:", e)
         return None
 
+def crop_recommendations(month, temp=None, rain=None):
+    scored = []
+    for crop in CROPS:
+        score = 0
+        if month in crop["months"]:
+            score += 50
+        if temp is not None and crop["min_temp"] <= temp <= crop["max_temp"]:
+            score += 30
+        if rain is not None and crop["min_rain"] <= rain <= crop["max_rain"]:
+            score += 20
+        scored.append((score, crop))
+    scored.sort(key=lambda x: (-x[0], x[1]["name"]))
+    return [c for s, c in scored[:8] if s > 0]
 
-# ---------------- RISK CALCULATION ----------------
+def image_quality(path):
+    try:
+        from PIL import Image, ImageStat
+        im = Image.open(path).convert("RGB")
+        w, h = im.size
+        stat = ImageStat.Stat(im)
+        brightness = sum(stat.mean) / 3
+        if w < 300 or h < 300:
+            return False, "Photo resolution is low. Please upload a clearer image."
+        if brightness < 35 or brightness > 235:
+            return False, "Photo lighting is unclear. Try a well-lit crop photo."
+        return True, "Photo quality looks usable for analysis."
+    except Exception:
+        return True, "Photo received."
 
-def calculate_risk(crop, age, moisture, irrigation, humidity, rainfall):
-
-    score = 20
-    reasons = []
-
-    if humidity >= 75:
-        score += 20
-        reasons.append("High humidity")
-
-    elif humidity >= 60:
-        score += 10
-        reasons.append("Moderate humidity")
-
-    if rainfall >= 20:
-        score += 20
-        reasons.append("High rainfall")
-
-    elif rainfall >= 5:
-        score += 10
-        reasons.append("Recent rainfall")
-
-    if moisture >= 75:
-        score += 15
-        reasons.append("High soil moisture")
-
-    elif moisture >= 60:
-        score += 8
-        reasons.append("Moderate soil moisture")
-
+def calculate_risk(crop, age, moisture, irrigation, humidity, rainfall, temp=None):
+    score, reasons = 20, []
+    if humidity is not None:
+        if humidity >= 75: score += 20; reasons.append("High humidity")
+        elif humidity >= 60: score += 10; reasons.append("Moderate humidity")
+    if rainfall is not None:
+        if rainfall >= 20: score += 20; reasons.append("High recent rainfall")
+        elif rainfall >= 5: score += 10; reasons.append("Recent rainfall")
+    if moisture is not None:
+        if moisture >= 75: score += 15; reasons.append("High soil moisture")
+        elif moisture >= 60: score += 8; reasons.append("Moderate soil moisture")
     if irrigation == "frequent":
-        score += 10
-        reasons.append("Frequent irrigation")
-
+        score += 10; reasons.append("Frequent irrigation")
     if 20 <= age <= 60:
-        score += 5
-        reasons.append("Susceptible crop stage")
-
+        score += 5; reasons.append("Susceptible growth stage")
+    if temp is not None and (temp < 12 or temp > 35):
+        score += 8; reasons.append("Temperature stress signal")
     score = min(score, 95)
+    level = "HIGH" if score >= 70 else "MEDIUM" if score >= 45 else "LOW"
+    data = DISEASES.get(crop, DISEASES["Tomato"])
+    disease = data["high"] if level == "HIGH" else data["medium"] if level == "MEDIUM" else "No major disease signal"
+    severity = "Severe" if score >= 75 else "Moderate" if score >= 50 else "Mild"
+    return score, level, disease, severity, reasons, data["advice"]
 
-    if score >= 70:
-        level = "HIGH"
-
-    elif score >= 45:
-        level = "MEDIUM"
-
-    else:
-        level = "LOW"
-
-    crop_data = DISEASES.get(
-        crop,
-        DISEASES["Tomato"]
-    )
-
-    if level == "HIGH":
-        disease = crop_data["high"]
-
-    elif level == "MEDIUM":
-        disease = crop_data["medium"]
-
-    else:
-        disease = "No major disease signal"
-
-    return (
-        score,
-        level,
-        disease,
-        reasons,
-        crop_data["advice"]
-    )
-
-
-# ---------------- HOME ----------------
-
-@app.route("/", methods=["GET"])
+@app.route("/")
 def index():
-
-    return render_template("index.html")
-
-
-# ---------------- ANALYZE ----------------
+    month = datetime.now().month
+    return render_template("index.html", crops=CROPS, recommendations=crop_recommendations(month))
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-
     crop = request.form.get("crop", "Tomato")
-
-    age = int(
-        request.form.get("age", 30)
-    )
-
-    moisture = int(
-        request.form.get("moisture", 50)
-    )
-
-    irrigation = request.form.get(
-        "irrigation",
-        "normal"
-    )
-
-    humidity = int(
-        request.form.get("humidity", 65)
-    )
-
-    rainfall = float(
-        request.form.get("rainfall", 5)
-    )
-
-    latitude = request.form.get("latitude")
-    longitude = request.form.get("longitude")
-
-    # -------- GET WEATHER --------
+    age = int(request.form.get("age", 30) or 30)
+    manual_moisture = float(request.form.get("moisture", 50) or 50)
+    irrigation = request.form.get("irrigation", "normal")
+    humidity = float(request.form.get("humidity", 65) or 65)
+    rainfall = float(request.form.get("rainfall", 5) or 5)
+    lat = request.form.get("latitude") or None
+    lon = request.form.get("longitude") or None
 
     weather = None
+    if lat and lon:
+        try:
+            weather = get_weather(float(lat), float(lon))
+        except ValueError:
+            weather = None
 
-    if latitude and longitude:
+    if weather:
+        humidity = weather["humidity"] if weather["humidity"] is not None else humidity
+        rainfall = weather["daily_rainfall"]
+        soil = weather["soil_moisture"]
+        moisture = round(soil * 100, 1) if soil is not None else manual_moisture
+    else:
+        moisture = manual_moisture
 
-        weather = get_weather(
-            float(latitude),
-            float(longitude)
-        )
-
-        if weather:
-
-            humidity = weather["humidity"]
-
-            rainfall = weather["daily_rainfall"]
-
-
-    # -------- IMAGE UPLOAD --------
-
-    image_name = None
-
+    image_name, quality_ok, quality_message = None, True, "No photo uploaded."
     image = request.files.get("image")
-
     if image and image.filename:
+        name = secure_filename(image.filename)
+        if name:
+            path = os.path.join(app.config["UPLOAD_FOLDER"], name)
+            image.save(path)
+            image_name = name
+            quality_ok, quality_message = image_quality(path)
 
-        safe_name = os.path.basename(
-            image.filename
-        )
-
-        image.save(
-            os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                safe_name
-            )
-        )
-
-        image_name = safe_name
-
-
-    # -------- RISK --------
-
-    score, level, disease, reasons, advice = calculate_risk(
-        crop,
-        age,
-        moisture,
-        irrigation,
-        humidity,
-        rainfall
+    temp = weather["temperature"] if weather else None
+    score, level, disease, severity, reasons, advice = calculate_risk(
+        crop, age, moisture, irrigation, humidity, rainfall, temp
     )
 
+    # IMPORTANT: this is contextual risk scoring, not a trained image-disease model.
+    ai_status = "AI model not connected yet"
+    ai_confidence = "Pending trained model"
+    if image_name and not quality_ok:
+        ai_status = "Image quality check failed"
+    elif image_name:
+        ai_status = "Photo accepted for future CV model"
 
-    # -------- TIMELINE --------
+    con = db()
+    con.execute("""INSERT INTO history
+        (created_at,crop,disease,level,score,confidence,latitude,longitude)
+        VALUES (?,?,?,?,?,?,?,?)""",
+        (datetime.now().isoformat(timespec="seconds"), crop, disease, level,
+         score, ai_confidence, lat, lon))
+    con.commit()
+    con.close()
 
-    timeline = [
+    recs = crop_recommendations(datetime.now().month, temp, rainfall)
+    return render_template("result.html", crop=crop, score=score, level=level,
+        disease=disease, severity=severity, reasons=reasons, advice=advice,
+        weather=weather, moisture=moisture, image_name=image_name,
+        quality_ok=quality_ok, quality_message=quality_message,
+        ai_status=ai_status, ai_confidence=ai_confidence,
+        latitude=lat, longitude=lon, recommendations=recs)
 
-        {
-            "day": "Day 1",
-            "status": "Normal",
-            "class": "low"
-        },
-
-        {
-            "day": "Day 3",
-            "status": "Risk increasing",
-            "class": "medium"
-        },
-
-        {
-            "day": "Day 5",
-            "status": "Warning",
-            "class": "medium"
-        },
-
-        {
-            "day": "Today",
-            "status": f"{level.title()} risk",
-            "class": level.lower()
-        }
-
-    ]
-
-
-    # -------- RESULT --------
-
-    return render_template(
-        "result.html",
-
-        crop=crop,
-
-        score=score,
-
-        level=level,
-
-        disease=disease,
-
-        reasons=reasons,
-
-        advice=advice,
-
-        timeline=timeline,
-
-        image_name=image_name,
-
-        weather=weather,
-
-        temperature=(
-            weather["temperature"]
-            if weather else None
-        ),
-
-        humidity=humidity,
-
-        rainfall=rainfall,
-
-        wind_speed=(
-            weather["wind_speed"]
-            if weather else None
-        ),
-
-        max_temp=(
-            weather["max_temp"]
-            if weather else None
-        ),
-
-        min_temp=(
-            weather["min_temp"]
-            if weather else None
-        ),
-
-        daily_rainfall=(
-            weather["daily_rainfall"]
-            if weather else None
-        ),
-
-        latitude=latitude,
-
-        longitude=longitude
-    )
-
-
-# ---------------- RUN ----------------
+@app.route("/history")
+def history():
+    con = db()
+    rows = con.execute("SELECT * FROM history ORDER BY id DESC LIMIT 50").fetchall()
+    con.close()
+    return render_template("history.html", rows=rows)
 
 if __name__ == "__main__":
     app.run(debug=True)
