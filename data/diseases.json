@@ -1,101 +1,402 @@
 {
   "Tomato": {
-    "high": "Early Blight / Fungal disease risk",
-    "medium": "Early Blight risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect lower leaves for spots and unusual discoloration.",
-      "Avoid unnecessary overhead irrigation.",
-      "Remove heavily affected plant material safely.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Potato": {
-    "high": "Late Blight risk",
-    "medium": "Late Blight risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves regularly for new spots.",
-      "Improve field airflow where practical.",
-      "Avoid prolonged leaf wetness.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Wheat": {
-    "high": "Rust disease risk",
-    "medium": "Rust risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves for unusual rust-colored markings.",
-      "Track weather changes and nearby reports.",
-      "Contact an agriculture expert if symptoms spread."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Rice": {
-    "high": "Rice blast disease risk",
-    "medium": "Rice blast risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves for spindle-shaped lesions.",
-      "Avoid excessive nitrogen application.",
-      "Maintain balanced water and field management.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Maize": {
-    "high": "Fall armyworm / Leaf disease risk",
-    "medium": "Maize leaf disease risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect young leaves and whorls for feeding damage.",
-      "Check plants regularly during early growth.",
-      "Remove heavily affected plant material where practical.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Cotton": {
-    "high": "Cotton leaf disease / Pest risk",
-    "medium": "Cotton health risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves and growing points for spots or pest activity.",
-      "Monitor the crop regularly after humid or rainy weather.",
-      "Keep the field well managed and avoid unnecessary irrigation.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Sugarcane": {
-    "high": "Red rot disease risk",
-    "medium": "Sugarcane disease risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect stalks and leaves for unusual discoloration.",
-      "Use healthy planting material.",
-      "Avoid prolonged waterlogging where possible.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Groundnut": {
-    "high": "Leaf spot disease risk",
-    "medium": "Groundnut leaf disease risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect lower leaves for dark or brown spots.",
-      "Monitor closely after humid and rainy periods.",
-      "Maintain suitable spacing and field airflow.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Soybean": {
-    "high": "Soybean fungal disease risk",
-    "medium": "Soybean disease risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves for spots, yellowing, or unusual growth.",
-      "Monitor fields after extended wet weather.",
-      "Avoid unnecessary irrigation and prolonged leaf wetness.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   },
   "Chilli": {
-    "high": "Leaf spot / Fungal disease risk",
-    "medium": "Chilli disease risk signal",
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
     "advice": [
-      "Inspect leaves and fruits for spots or discoloration.",
-      "Avoid unnecessary overhead irrigation.",
-      "Remove severely affected plant material safely.",
-      "Follow local agricultural advisory before applying any treatment."
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Onion": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Garlic": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Mustard": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Barley": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Bajra": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Jowar": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Ragi": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Gram (Chickpea)": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Pigeon Pea (Arhar)": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Green Gram (Moong)": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Black Gram (Urad)": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Lentil (Masoor)": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Peas": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Cabbage": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Cauliflower": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Brinjal": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Okra": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Cucumber": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Carrot": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Spinach": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Turmeric": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Ginger": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Tea": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Coffee": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Banana": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Mango": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Grapes": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Pomegranate": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Papaya": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
+    ]
+  },
+  "Watermelon": {
+    "high": "Possible disease/pest stress — field inspection advised",
+    "medium": "Possible early disease/pest risk",
+    "advice": [
+      "Inspect several plants and the underside of leaves.",
+      "Remove badly affected plant material where practical.",
+      "Avoid unnecessary irrigation and improve field airflow/drainage.",
+      "Use only crop-approved, locally registered products and follow the product label or agricultural expert guidance."
     ]
   }
 }
