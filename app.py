@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, jsonify
 import json, os, sqlite3, urllib.parse, urllib.request
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from PIL import Image, ImageStat
+from ai_vision import analyze_crop_image
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -163,9 +164,6 @@ def index():
     return render_template('index.html', crops=CROPS, month=month_name())
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
 
 
 @app.route('/location-context')
@@ -182,17 +180,30 @@ def analyze():
     temp,humidity,rainfall=values['temperature'],values['humidity'],values['rainfall']; soil=values['soil_moisture']
     image_name=None; quality=None
     image=request.files.get('image')
+    ai_result = None
+    ai_error = None
     if image and image.filename:
         filename=secure_filename(image.filename)
         if filename:
-            image_name=filename; path=os.path.join(app.config['UPLOAD_FOLDER'],filename); image.save(path); quality=image_quality(path)
+            image_name=filename
+            path=os.path.join(app.config['UPLOAD_FOLDER'],filename)
+            image.save(path)
+            # No photo-quality gate: send the uploaded image to the vision model as-is.
+            quality=image_quality(path)
+            vision=analyze_crop_image(path,crop,{'temperature':temp,'humidity':humidity,'rainfall':rainfall})
+            if vision.get('ok'): ai_result=vision
+            else: ai_error=vision.get('error')
     score,level,disease,advice=disease_from_context(crop,humidity,rainfall,temp,soil)
+    if ai_result:
+        disease=ai_result.get('disease',disease)
+        advice=ai_result.get('advice') or advice
     recommendations=crop_recommendations(temp,rainfall,month_name())
     con=db(); con.execute('''INSERT INTO history
         (created_at,crop,disease,risk,severity,confidence,latitude,longitude,temperature,humidity,rainfall,soil_moisture,image_name)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)''',
         (datetime.now().strftime('%Y-%m-%d %H:%M'),crop,disease,score,level,'',lat,lon,str(temp),str(humidity),str(rainfall),str(round(soil*100,1)),image_name)); con.commit(); con.close()
     return render_template('result.html',crop=crop,disease=disease,advice=advice,image_name=image_name,quality=quality,
+        ai_result=ai_result,ai_error=ai_error,
         weather=weather,temperature=temp,humidity=humidity,rainfall=rainfall,soil_moisture=soil,recommendations=recommendations,
         latitude=lat,longitude=lon,age=values['age'],irrigation=values['irrigation'])
 

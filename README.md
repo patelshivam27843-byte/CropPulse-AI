@@ -42,3 +42,28 @@ Soil moisture is an estimate/model value when a field sensor is not available. C
 
 ## Image credits
 Homepage image sources and licenses are listed in `static/assets/README.md`.
+
+## Real AI crop-disease diagnosis
+The photo diagnosis uses Google's Gemini multimodal API when `GEMINI_API_KEY` is configured in Render. The server sends the uploaded crop image plus crop/weather context and asks the model to return a structured disease result. It does not use the old context-only disease selector for the photo result.
+
+### Render environment variables
+Set:
+- `GEMINI_API_KEY` = your Google AI Studio API key
+- `GEMINI_MODEL` = `gemini-2.5-flash` (optional)
+
+Without `GEMINI_API_KEY`, the app will not pretend that a fixed disease answer came from AI; it will tell the farmer that AI photo diagnosis is unavailable.
+
+Google's Gemini API supports image inputs and structured JSON responses. See the official docs: https://ai.google.dev/gemini-api/docs/image-understanding and https://ai.google.dev/api/generate-content
+
+
+## Authentication
+Login/OTP/Google authentication has been intentionally removed. The portal works without an account.
+
+## Real photo disease AI
+The uploaded crop photo is sent to the OpenAI Responses API when `OPENAI_API_KEY` is configured in Render. The model analyzes the actual image; there is no fixed disease response and no photo-quality gate. If the visual evidence is insufficient, the AI says that instead of inventing a disease.
+
+Render environment variables:
+- `OPENAI_API_KEY` = your OpenAI API key
+- `OPENAI_VISION_MODEL` = `gpt-5.6-luna` (optional; default)
+
+Never put the API key in GitHub. The analysis result page uses a real Indian farmer spreading fertilizer image from Wikimedia Commons, CC BY-SA 2.0: https://commons.wikimedia.org/wiki/File:An_Indian_farmer_spreading_fertilizer_over_a_crop.jpg
