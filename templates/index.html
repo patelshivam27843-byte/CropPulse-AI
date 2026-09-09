@@ -1,129 +1,23 @@
-<!doctype html>
-<html lang="hi">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CropPulse AI — Smart Farming</title>
-<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
-</head>
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CropPulse AI — Smart Farming</title><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></head>
 <body>
-<header class="topbar">
-  <a class="brand" href="/"><span class="brand-mark">🌱</span><span><b>CropPulse <em>AI</em></b><small>Smart Farming • Healthy Tomorrow</small></span></a>
-  <nav>
-    <a class="active" href="/">⌂ <span>Home</span></a>
-    <a href="#analysis">🌿 <span>Field Analysis</span></a>
-    <a href="#weather">☁ <span>Weather</span></a>
-    <a href="#guide">📖 <span>Crop Guide</span></a>
-    <a href="/history">◷ <span>History</span></a>
-    <a href="#about">ⓘ <span>About</span></a>
-  </nav>
-  <div class="nav-actions"><button class="lang-btn" onclick="toggleLanguage()">🌐 <span id="langLabel">हिंदी</span>⌄</button><a class="outline-btn" href="/login">👤 Login</a><a class="solid-btn" href="/login">👥 Sign Up</a></div>
-</header>
-
-<main>
-<section class="hero-shell">
-  <div class="hero-copy">
-    <span class="eyebrow">🌿 AI POWERED • किसान के लिए आसान</span>
-    <h1>Healthy Fields.<br><strong>Happier Farmers.</strong><br>Stronger India.</h1>
-    <p class="hero-sub">फसल की फोटो, आपकी location और मौसम की जानकारी को जोड़कर खेत की स्थिति समझें — एक ही आसान प्लेटफॉर्म पर।</p>
-    <div class="hero-actions"><a class="hero-primary" href="#analysis">📷 मेरी फसल जाँचें <span>→</span></a><button class="hero-secondary" onclick="getLocation()">📍 मेरी Location लें</button></div>
-    <div class="hero-note">बेहतर जानकारी • बेहतर फैसला • बेहतर फसल 🌱</div>
-  </div>
-  <div class="hero-visual"><div class="farmer-illustration"><div class="sun"></div><div class="farmer-emoji">👨🏽‍🌾</div><div class="field-lines"></div></div><div class="visual-tag"><b>Technology</b><br>किसान के हाथों में<br>बेहतर कल के लिए</div></div>
-
-  <aside class="login-card">
-    <div class="login-logo">🌱</div><b class="login-brand">CropPulse <span>AI</span></b>
-    <h2>Welcome Back!</h2><p>स्मार्ट खेती की ओर एक कदम और।</p>
-    <div class="login-tabs"><button class="selected">🌾 Farmer Login</button><button>👨‍🔬 Expert Login</button></div>
-    <a class="login-input" href="/login">✉️ <span>मोबाइल नंबर या ईमेल</span></a>
-    <a class="login-input" href="/login">🔒 <span>पासवर्ड</span><b>⌾</b></a>
-    <div class="remember"><span>□ Remember me</span><a href="/login">Forgot password?</a></div>
-    <a class="login-main" href="/login">Login →</a><div class="or"><span></span>OR<span></span></div>
-    <a class="social-login" href="/login">🌐 &nbsp; Continue with Google</a><a class="social-login" href="/login">🟢 &nbsp; Login with Phone</a>
-    <p class="signup-text">Don't have an account? <a href="/login">Sign Up</a></p>
-  </aside>
-</section>
-
-<section class="feature-strip" id="guide">
-  <a href="#analysis" class="feature-card green"><span>📷</span><b>Crop Analysis</b><small>फोटो से फसल की स्थिति जाँचें</small>→</a>
-  <a href="#weather" class="feature-card blue"><span>☁️</span><b>Live Weather</b><small>Location के हिसाब से मौसम</small>→</a>
-  <a href="#analysis" class="feature-card pink"><span>⚠️</span><b>Risk Forecast</b><small>रोग और कीट का जोखिम समझें</small>→</a>
-  <a href="#analysis" class="feature-card yellow"><span>🌱</span><b>Crop Recommendations</b><small>मौसम के हिसाब से फसल सुझाव</small>→</a>
-  <a href="/history" class="feature-card purple"><span>📊</span><b>Field History</b><small>पुराने जाँच परिणाम देखें</small>→</a>
-  <a href="#chat" class="feature-card cyan"><span>🗣️</span><b>AI किसान साथी</b><small>सवाल पूछें, आसान जवाब पाएँ</small>→</a>
-</section>
-
-<section class="stats-bar"><div><b>🌾</b><strong>Farmer First</strong><small>आसान भाषा</small></div><div><b>🌱</b><strong>25+ Crop Ready</strong><small>बढ़ाया जा सकता है</small></div><div><b>📍</b><strong>Location Aware</strong><small>स्थानीय संकेत</small></div><div><b>🤖</b><strong>AI Ready</strong><small>Vision model integration</small></div></section>
-
-<section class="analysis-section" id="analysis">
-  <div class="section-heading"><span>01</span><div><h2>मेरे खेत की जाँच</h2><p>किसान को सिर्फ Location और फोटो देना है — बाकी जानकारी system खुद भरेगा।</p></div></div>
-  <form action="/analyze" method="post" enctype="multipart/form-data" id="analysisForm">
-    <input type="hidden" name="latitude" id="latitude"><input type="hidden" name="longitude" id="longitude">
-    <input type="hidden" name="age" id="age" value="30"><input type="hidden" name="irrigation" id="irrigation" value="normal">
-    <input type="hidden" name="moisture" id="moisture" value="50"><input type="hidden" name="temperature" id="temperature" value="28"><input type="hidden" name="humidity" id="humidity" value="65">
-    <div class="analysis-grid">
-      <div class="panel">
-        <div class="panel-title">📍 <b>Location</b><span id="location-status">Location लेने के लिए button दबाएँ</span></div>
-        <button type="button" class="location-big" onclick="getLocation()">📍 मेरी Location लें</button>
-        <div class="auto-grid"><div><small>तापमान</small><b id="autoTemp">-- °C</b></div><div><small>हवा की नमी</small><b id="autoHumidity">-- %</b></div><div><small>बारिश</small><b id="autoRain">-- mm</b></div><div><small>मिट्टी की नमी</small><b id="autoSoil">-- %</b></div></div>
-        <p class="auto-note">✓ ये जानकारी location और weather data से अपने-आप भरी जाती है। मिट्टी की नमी अनुमानित है।</p>
-      </div>
-      <div class="panel">
-        <div class="panel-title">🌾 <b>फसल चुनें</b><span>Auto field details</span></div>
-        <label>फसल खोजें</label><input id="cropSearch" class="text-input" placeholder="जैसे: गेहूँ, धान, Tomato...">
-        <label>फसल</label><select name="crop" id="crop" class="text-input">{% for c in crops %}<option value="{{c.name}}">{{c.name}}</option>{% endfor %}</select>
-        <div class="auto-fields"><div><span>🌿 Crop age</span><b id="autoAge">30 दिन (अनुमानित)</b></div><div><span>💧 Irrigation</span><b id="autoIrrigation">Normal</b></div></div>
-        <p class="auto-note">✓ Crop age और irrigation भी system estimate करेगा — किसान को manually भरने की जरूरत नहीं।</p>
-      </div>
-      <div class="panel photo-panel">
-        <div class="panel-title">📷 <b>फसल की फोटो</b><span>AI के लिए</span></div>
-        <label class="upload-area"><div class="upload-icon">📸</div><strong>पत्ती / फल / पौधे की साफ फोटो लगाएँ</strong><small>अच्छी रोशनी में फोटो लें</small><span class="upload-button">फोटो चुनें<input type="file" name="image" accept="image/*" onchange="showFileName(this)"></span><em id="file-name">अभी फोटो नहीं चुनी</em></label>
-        <button class="analyze-submit" type="submit">🔎 मेरी फसल जाँचें <span>→</span></button>
-      </div>
-    </div>
-  </form>
-</section>
-
-<section class="weather-preview" id="weather"><div><span class="eyebrow">LIVE FIELD WEATHER</span><h2>Location मिलते ही मौसम अपने-आप</h2><p>तापमान, हवा की नमी, बारिश और मिट्टी की अनुमानित नमी analysis में जुड़ जाती है।</p></div><div class="weather-mini"><span>🌡️</span><b id="weatherTemp">--°C</b><small>Temperature</small></div><div class="weather-mini"><span>💧</span><b id="weatherHum">--%</b><small>Humidity</small></div><div class="weather-mini"><span>🌧️</span><b id="weatherRain">-- mm</b><small>Rainfall</small></div></section>
-
-<section class="about-band" id="about"><div><span class="eyebrow">SMALL STEPS • BIG HARVESTS</span><h2>तकनीक किसान की भाषा में।</h2><p>CropPulse AI का लक्ष्य photo → context → risk → advice → follow-up को आसान बनाना है।</p></div><a href="#analysis">अभी खेत जाँचें →</a></section>
-</main>
-
-<button class="chat-fab" onclick="toggleChat()">💬</button>
-<div class="chat-box" id="chat"><div class="chat-head"><div><b>🤖 AI किसान साथी</b><small>आपके खेत की जानकारी के साथ</small></div><button onclick="toggleChat()">×</button></div><div class="chat-messages" id="chatMessages"><div class="bot-msg">नमस्ते किसान भाई! 🌱<br>मौसम, बीमारी, मिट्टी की नमी, सिंचाई या risk के बारे में पूछिए।</div></div><div class="chat-suggestions"><button onclick="askQuick('मेरी फसल का जोखिम क्या है?')">जोखिम?</button><button onclick="askQuick('मौसम कैसा है?')">मौसम?</button><button onclick="askQuick('बीमारी के बारे में बताओ')">बीमारी?</button></div><div class="chat-input"><input id="chatInput" placeholder="अपना सवाल लिखें..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">➤</button></div></div>
-
-<footer><div><b>🌱 CropPulse AI</b><small>Smart Farming • Healthy Tomorrow</small></div><div>Home &nbsp;|&nbsp; Features &nbsp;|&nbsp; About &nbsp;|&nbsp; Contact &nbsp;|&nbsp; Privacy</div><div>Made with ❤️ for Farmers</div></footer>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark">🌱</span><span><b>CropPulse <em>AI</em></b><small>Smart Farming • Healthy Tomorrow</small></span></a><nav><a class="active" href="#home">⌂ Home</a><a href="#analysis">🌿 Field Analysis</a><a href="#weather">☁ Weather</a><a href="#guide">📖 Crop Guide</a><a href="/history">◷ History</a><a href="#about">ⓘ About</a></nav><div class="nav-actions"><button class="lang-btn" onclick="toggleLanguage()">🌐 <span id="langLabel">हिंदी</span>⌄</button><a class="outline-btn" href="/login">👤 Login</a><a class="solid-btn" href="/login">Sign Up</a></div></header>
+<main id="home">
+<section class="hero"><div class="hero-left"><div class="eyebrow">🌿 AI POWERED • हर किसान के लिए</div><h1>Healthy Fields.<br><strong>Happier Farmers.</strong><br>Stronger India.</h1><p>फसल की फोटो, आपकी Location और मौसम की जानकारी को जोड़कर खेती की बेहतर जानकारी पाएं।</p><div class="hero-actions"><a class="hero-primary" href="#analysis">📷 मेरी फसल जाँचें →</a><button class="hero-secondary" onclick="getLocation()">📍 मेरी Location लें</button></div><div class="hero-note">बेहतर जानकारी • बेहतर फैसला • बेहतर फसल</div></div><div class="hero-map"><div class="map-glow"></div><img class="india-map" src="https://upload.wikimedia.org/wikipedia/commons/b/b3/India_Map_Flag.svg" alt="India map"><img class="farmer-photo" src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Indian_farmers.jpg" alt="Indian farmers in field"><div class="hero-caption">भारत के खेतों से<br><b>किसान के लिए स्मार्ट जानकारी</b></div></div><aside class="quick-login"><div class="mini-logo">🌱</div><h2>किसान Login</h2><p>OTP, Email या Google से सुरक्षित प्रवेश</p><a href="/login" class="login-main">📱 Login with OTP</a><a href="/login" class="social-login">G &nbsp; Google Account</a><a href="/login" class="social-login">✉️ Email Login</a></aside></section>
+<section class="crop-ribbon" id="guide"><div class="crop-card"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Rice_Crops.jpg"><b>धान</b></div><div class="crop-card"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Wheat_crop_farm_at_Chinawal.jpg"><b>गेहूँ</b></div><div class="crop-card"><img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Cotton_crop_in_the_field.JPG"><b>कपास</b></div><div class="crop-card"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Tomato_crop_at_Mountain_Horticultural_Crops_Research_Station.jpg/960px-Tomato_crop_at_Mountain_Horticultural_Crops_Research_Station.jpg"><b>टमाटर</b></div><div class="crop-card crop-more"><strong>+100</strong><b>और फसलें</b></div></section>
+<section class="feature-strip"><a href="#analysis" class="feature-card green"><span>📷</span><b>फसल जाँच</b><small>पौधे की फोटो से शुरुआत</small>→</a><a href="#weather" class="feature-card blue"><span>☁️</span><b>मौसम</b><small>Location के अनुसार जानकारी</small>→</a><a href="#analysis" class="feature-card yellow"><span>🌱</span><b>फसल सुझाव</b><small>मौसम और मौसम के अनुसार</small>→</a><a href="#chat" class="feature-card cyan"><span>🤖</span><b>AI किसान साथी</b><small>सवाल पूछें, जवाब पाएं</small>→</a><a href="/history" class="feature-card purple"><span>📊</span><b>इतिहास</b><small>पुरानी जाँच देखें</small>→</a></section>
+<section class="analysis-section" id="analysis"><div class="section-heading"><span>01</span><div><h2>मेरे खेत की जाँच</h2><p>किसान को सिर्फ Location, फसल और फोटो देनी है — बाकी जानकारी अपने-आप आएगी।</p></div></div><form action="/analyze" method="post" enctype="multipart/form-data" id="analysisForm"><input type="hidden" name="latitude" id="latitude"><input type="hidden" name="longitude" id="longitude"><input type="hidden" name="age" id="age"><input type="hidden" name="irrigation" id="irrigation"><input type="hidden" name="moisture" id="moisture"><input type="hidden" name="temperature" id="temperature"><input type="hidden" name="humidity" id="humidity"><div class="analysis-grid"><div class="panel"><div class="panel-title">📍 <b>Location</b><span id="location-status">Location लेने के लिए button दबाएँ</span></div><button type="button" class="location-big" onclick="getLocation()">📍 मेरी Location लें</button><div class="auto-grid"><div><small>तापमान</small><b id="autoTemp">-- °C</b></div><div><small>हवा की नमी</small><b id="autoHumidity">-- %</b></div><div><small>बारिश</small><b id="autoRain">-- mm</b></div><div><small>मिट्टी की नमी</small><b id="autoSoil">-- %</b></div></div><div class="auto-fields"><div><span>📅 फसल आयु</span><b id="autoAge">--</b></div><div><span>💦 सिंचाई</span><b id="autoIrrigation">--</b></div></div><p class="auto-note">✓ तापमान, नमी, बारिश, soil moisture, crop age और irrigation system खुद estimate करेगा।</p></div><div class="panel"><div class="panel-title">🌾 <b>फसल चुनें</b><span>Search</span></div><input id="cropSearch" class="text-input" placeholder="जैसे: गेहूँ, धान, Tomato..."><label>फसल</label><select name="crop" id="crop" class="text-input">{% for c in crops %}<option value="{{c.name}}">{{c.name}}</option>{% endfor %}</select><div class="helper-box">📌 Location और मौसम के अनुसार crop recommendations भी नीचे मिलेंगे।</div></div><div class="panel photo-panel"><div class="panel-title">📷 <b>पौधे की फोटो</b><span>साफ फोटो बेहतर</span></div><label class="upload-area"><div class="upload-icon">📸</div><strong>पत्ती या पौधे की साफ फोटो लगाएँ</strong><small>अच्छी रोशनी में फोटो लें</small><span class="upload-button">फोटो चुनें<input type="file" name="image" accept="image/*" onchange="showFileName(this)"></span><em id="file-name">अभी फोटो नहीं चुनी</em></label><button class="analyze-submit" type="submit">🔎 मेरी फसल जाँचें <span>→</span></button></div></div></form></section>
+<section class="weather-section" id="weather"><div><span class="eyebrow">LIVE FIELD WEATHER</span><h2>Location मिलते ही मौसम अपने-आप</h2><p>किसान को temperature, humidity और rainfall manually भरने की जरूरत नहीं।</p></div><div class="weather-mini"><b>🌡️ <span id="wTemp">--</span>°C</b><b>💧 <span id="wHum">--</span>%</b><b>🌧️ <span id="wRain">--</span> mm</b></div></section>
+<section class="chat-section" id="chat"><div><span class="eyebrow">🤖 CROP PULSE किसान साथी</span><h2>फसल के बारे में पूछिए</h2><p>Location और selected crop का context chatbot को अपने-आप मिलेगा।</p></div><div class="chat-box"><div id="chatMessages"><div class="bot-msg">नमस्ते किसान भाई/बहन! फसल की बीमारी, मौसम, मिट्टी या सिंचाई के बारे में पूछिए।</div></div><div class="chat-input"><input id="chatInput" placeholder="अपना सवाल लिखें..."><button onclick="sendChat()">भेजें</button><button onclick="speakChat()">🔊</button><button onclick="stopChatVoice()">⏹</button></div></div></section>
+<section class="about" id="about"><h2>तकनीक किसान के हाथों में</h2><p>CropPulse AI का लक्ष्य किसान के लिए जटिल field data को सरल जानकारी में बदलना है।</p></section>
+</main><footer>🌱 <b>CropPulse AI</b> · Smart Farming • Healthy Tomorrow</footer>
 <script>
-let currentContext={};
-function getLocation(){
-  const s=document.getElementById('location-status');
-  if(!navigator.geolocation){s.textContent='❌ Browser location support नहीं करता।';return;}
-  s.textContent='📡 Location ढूँढी जा रही है...';
-  navigator.geolocation.getCurrentPosition(async p=>{
-    const lat=p.coords.latitude, lon=p.coords.longitude;
-    document.getElementById('latitude').value=lat;document.getElementById('longitude').value=lon;
-    s.textContent='✓ Location मिल गई: '+lat.toFixed(4)+', '+lon.toFixed(4);
-    await loadContext(lat,lon);
-  },()=>s.textContent='⚠️ Location permission दें या browser settings जाँचें।',{enableHighAccuracy:true,timeout:10000,maximumAge:0});
-}
-async function loadContext(lat,lon){
-  const crop=document.getElementById('crop').value;
-  try{
-    const r=await fetch(`/location-context?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&crop=${encodeURIComponent(crop)}`);const d=await r.json();
-    document.getElementById('autoTemp').textContent=d.temperature+' °C';document.getElementById('autoHumidity').textContent=d.humidity+' %';document.getElementById('autoRain').textContent=d.rainfall+' mm';document.getElementById('autoSoil').textContent=Math.round(d.soil_moisture*100)+' %';
-    document.getElementById('autoAge').textContent=d.age+' दिन (अनुमानित)';document.getElementById('autoIrrigation').textContent=labelIrrigation(d.irrigation);
-    document.getElementById('age').value=d.age;document.getElementById('irrigation').value=d.irrigation;document.getElementById('moisture').value=Math.round(d.soil_moisture*100);document.getElementById('temperature').value=d.temperature;document.getElementById('humidity').value=d.humidity;
-    document.getElementById('weatherTemp').textContent=d.temperature+'°C';document.getElementById('weatherHum').textContent=d.humidity+'%';document.getElementById('weatherRain').textContent=d.rainfall+' mm';
-    currentContext={crop,temperature:d.temperature,humidity:d.humidity,rainfall:d.rainfall,soil_moisture:Math.round(d.soil_moisture*100),risk:'-',disease:'-'};
-  }catch(e){document.getElementById('location-status').textContent='⚠️ Weather data अभी नहीं मिल पाया।';}
-}
-function labelIrrigation(x){return x==='frequent'?'Frequent':x==='low'?'Low':'Normal';}
-document.getElementById('crop').addEventListener('change',async()=>{const lat=document.getElementById('latitude').value,lon=document.getElementById('longitude').value;if(lat&&lon)await loadContext(lat,lon);});
-document.getElementById('cropSearch').addEventListener('input',function(){const q=this.value.toLowerCase();const sel=document.getElementById('crop');[...sel.options].forEach(o=>o.hidden=q&&!o.text.toLowerCase().includes(q));const first=[...sel.options].find(o=>!o.hidden);if(first){sel.value=first.value;sel.dispatchEvent(new Event('change'));}});
-function showFileName(i){document.getElementById('file-name').textContent=i.files.length?'✓ '+i.files[0].name:'अभी फोटो नहीं चुनी';}
-function toggleChat(){document.getElementById('chat').classList.toggle('open');}
-function askQuick(t){document.getElementById('chatInput').value=t;sendChat();}
-async function sendChat(){const input=document.getElementById('chatInput'),msg=input.value.trim();if(!msg)return;const box=document.getElementById('chatMessages');box.innerHTML+=`<div class="user-msg">${escapeHtml(msg)}</div>`;input.value='';const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,context:currentContext})});const d=await r.json();box.innerHTML+=`<div class="bot-msg">${escapeHtml(d.reply)}</div>`;box.scrollTop=box.scrollHeight;}
+let currentLat='',currentLon='', chatSpeaking=null;
+function getLocation(){const s=document.getElementById('location-status');if(!navigator.geolocation){s.textContent='❌ Browser location support नहीं करता।';return;}s.textContent='📡 Location पता की जा रही है...';navigator.geolocation.getCurrentPosition(async p=>{currentLat=p.coords.latitude;currentLon=p.coords.longitude;document.getElementById('latitude').value=currentLat;document.getElementById('longitude').value=currentLon;s.textContent='✓ Location मिल गई: '+currentLat.toFixed(4)+', '+currentLon.toFixed(4);await updateContext();},()=>s.textContent='⚠️ Location permission दें।',{enableHighAccuracy:true,timeout:10000,maximumAge:0});}
+async function updateContext(){const crop=document.getElementById('crop').value;try{const r=await fetch(`/location-context?lat=${encodeURIComponent(currentLat)}&lon=${encodeURIComponent(currentLon)}&crop=${encodeURIComponent(crop)}`);const d=await r.json();const t=d.temperature??28,h=d.humidity??65,rain=d.rainfall??5,soil=Math.round((d.soil_moisture??.35)*100);document.getElementById('autoTemp').textContent=t+' °C';document.getElementById('autoHumidity').textContent=h+' %';document.getElementById('autoRain').textContent=rain+' mm';document.getElementById('autoSoil').textContent=soil+' %';document.getElementById('autoAge').textContent=d.age+' दिन (अनुमानित)';document.getElementById('autoIrrigation').textContent=d.irrigation==='frequent'?'अधिक':d.irrigation==='low'?'कम':'सामान्य';document.getElementById('temperature').value=t;document.getElementById('humidity').value=h;document.getElementById('moisture').value=soil;document.getElementById('age').value=d.age;document.getElementById('irrigation').value=d.irrigation;document.getElementById('wTemp').textContent=t;document.getElementById('wHum').textContent=h;document.getElementById('wRain').textContent=rain;}catch(e){}}
+document.getElementById('crop').addEventListener('change',()=>{if(currentLat)updateContext()});document.getElementById('cropSearch').addEventListener('input',function(){const q=this.value.toLowerCase();const s=document.getElementById('crop');[...s.options].forEach(o=>o.hidden=q&&!o.text.toLowerCase().includes(q));});
+function showFileName(i){document.getElementById('file-name').textContent=i.files?.length?'✓ '+i.files[0].name:'अभी फोटो नहीं चुनी';}
+function toggleLanguage(){const b=document.getElementById('langLabel');b.textContent=b.textContent==='हिंदी'?'English':'हिंदी';}
+async function sendChat(){const i=document.getElementById('chatInput'),m=i.value.trim();if(!m)return;const box=document.getElementById('chatMessages');box.innerHTML+=`<div class="user-msg">${escapeHtml(m)}</div>`;i.value='';const ctx={crop:document.getElementById('crop').value,temperature:document.getElementById('temperature').value||28,humidity:document.getElementById('humidity').value||65,rainfall:document.getElementById('autoRain').textContent.replace(' mm',''),soil_moisture:document.getElementById('moisture').value||50};try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m,context:ctx})});const d=await r.json();box.innerHTML+=`<div class="bot-msg">${escapeHtml(d.reply)}</div>`;}catch(e){box.innerHTML+='<div class="bot-msg">अभी जवाब नहीं मिल पाया।</div>';}box.scrollTop=box.scrollHeight;}
+function speakChat(){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const msgs=[...document.querySelectorAll('#chatMessages .bot-msg')];const u=new SpeechSynthesisUtterance(msgs.at(-1)?.innerText||'कृपया सवाल पूछिए');u.lang='hi-IN';u.rate=.9;chatSpeaking=u;speechSynthesis.speak(u)}function stopChatVoice(){if('speechSynthesis'in window){speechSynthesis.cancel();chatSpeaking=null}}
 function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function toggleLanguage(){const l=document.getElementById('langLabel');l.textContent=l.textContent==='हिंदी'?'English':'हिंदी';alert('Language switch UI तैयार है; full translation dictionary को अगले localization step में जोड़ा जा सकता है।');}
-</script>
-</body></html>
+</script></body></html>
