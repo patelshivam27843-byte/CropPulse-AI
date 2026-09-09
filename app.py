@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-import json, os, sqlite3, urllib.parse, urllib.request
+import json, os, sqlite3, urllib.parse, urllib.request, math
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from PIL import Image, ImageStat
@@ -14,10 +14,14 @@ with open("data/crops.json", encoding="utf-8") as f:
 with open("data/diseases.json", encoding="utf-8") as f:
     DISEASES = json.load(f)
 
+MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+
 def db():
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
     return con
+
 
 def init_db():
     con = db()
@@ -28,21 +32,26 @@ def init_db():
         temperature TEXT, humidity TEXT, rainfall TEXT, soil_moisture TEXT,
         image_name TEXT
     )""")
-    con.commit(); con.close()
+    con.commit()
+    con.close()
+
 
 def get_weather(lat, lon):
     if not lat or not lon:
         return {}
     params = urllib.parse.urlencode({
-        "latitude": lat, "longitude": lon,
+        "latitude": lat,
+        "longitude": lon,
         "current": "temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,soil_moisture_0_to_7cm",
         "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum",
-        "forecast_days": 1, "timezone": "auto"
+        "forecast_days": 1,
+        "timezone": "auto"
     })
     try:
-        with urllib.request.urlopen("https://api.open-meteo.com/v1/forecast?"+params, timeout=8) as r:
-            x=json.loads(r.read().decode())
-        c=x.get("current",{}); d=x.get("daily",{})
+        with urllib.request.urlopen("https://api.open-meteo.com/v1/forecast?" + params, timeout=8) as r:
+            x = json.loads(r.read().decode())
+        c = x.get("current", {})
+        d = x.get("daily", {})
         return {
             "temperature": c.get("temperature_2m"),
             "humidity": c.get("relative_humidity_2m"),
@@ -55,130 +64,262 @@ def get_weather(lat, lon):
     except Exception:
         return {}
 
+
 def month_name():
     return datetime.now().strftime("%B")
 
+
+def estimate_crop_age(crop):
+    """Estimate age from the crop's listed growing-season start.
+    This is only a planning estimate; actual sowing date is not known.
+    """
+    data = next((c for c in CROPS if c.get("name") == crop), {})
+    months = data.get("months", [])
+    if not months:
+        return 30
+    current_idx = datetime.now().month - 1
+    season_idxs = sorted(MONTHS.index(m) for m in months if m in MONTHS)
+    if current_idx in season_idxs:
+        start_idx = season_idxs[0]
+        if current_idx >= start_idx:
+            return max(1, min(180, (current_idx - start_idx) * 30 + datetime.now().day))
+        return 15
+    return 30
+
+
+def estimate_irrigation(temp, rain, soil, crop):
+    """Estimate irrigation need from weather/soil context, not actual irrigation activity."""
+    if rain is not None and rain >= 20:
+        return "low"
+    if soil is not None and soil >= 0.35:
+        return "low"
+    if rain is not None and rain < 3 and temp is not None and temp >= 30:
+        return "frequent"
+    return "normal"
+
+
+def estimate_soil(temp, humidity, rain, api_soil=None):
+    if api_soil is not None:
+        try:
+            return max(0.0, min(1.0, float(api_soil)))
+        except Exception:
+            pass
+    # Fallback estimate only when weather/soil API is unavailable.
+    t = float(temp if temp is not None else 28)
+    h = float(humidity if humidity is not None else 65)
+    r = float(rain if rain is not None else 5)
+    value = 0.15 + (h / 100) * 0.30 + min(r, 30) / 100
+    if t > 32:
+        value -= 0.06
+    return max(0.12, min(0.75, value))
+
+
 def crop_recommendations(temp, rain, month):
-    ranked=[]
+    ranked = []
     for c in CROPS:
-        score=0
-        months=c.get("months",[])
-        if month in months: score += 40
-        lo,hi=c.get("temp_range",[10,40])
+        score = 0
+        months = c.get("months", [])
+        if month in months:
+            score += 40
+        lo, hi = c.get("temp_range", [10, 40])
         if temp is not None:
-            if lo <= temp <= hi: score += 35
-            elif abs(temp-lo)<=5 or abs(temp-hi)<=5: score += 15
-        rlo,rhi=c.get("rainfall_range",[0,300])
+            if lo <= temp <= hi:
+                score += 35
+            elif abs(temp - lo) <= 5 or abs(temp - hi) <= 5:
+                score += 15
+        rlo, rhi = c.get("rainfall_range", [0, 300])
         if rain is not None:
-            if rlo <= rain <= rhi: score += 25
-            elif abs(rain-rlo)<=20 or abs(rain-rhi)<=20: score += 10
-        ranked.append((score,c))
-    ranked.sort(key=lambda x:x[0], reverse=True)
-    return [{"name":c["name"],"score":s,"reason":c.get("reason","Suitable for current conditions.")} for s,c in ranked]
+            if rlo <= rain <= rhi:
+                score += 25
+            elif abs(rain - rlo) <= 20 or abs(rain - rhi) <= 20:
+                score += 10
+        ranked.append((score, c))
+    ranked.sort(key=lambda x: x[0], reverse=True)
+    return [{"name": c["name"], "score": s, "reason": c.get("reason", "Current conditions are reasonably suitable.")} for s, c in ranked]
+
 
 def image_quality(path):
     try:
         with Image.open(path) as im:
-            w,h=im.size
-            stat=ImageStat.Stat(im.convert("RGB"))
-            brightness=sum(stat.mean)/3
-            issues=[]
-            if min(w,h)<300: issues.append("Image resolution is low.")
-            if brightness<35: issues.append("Image is too dark.")
-            if brightness>235: issues.append("Image is overexposed.")
-            return {"ok": not issues, "width":w, "height":h, "brightness":round(brightness), "issues":issues}
+            w, h = im.size
+            stat = ImageStat.Stat(im.convert("RGB"))
+            brightness = sum(stat.mean) / 3
+            issues = []
+            if min(w, h) < 300:
+                issues.append("Photo resolution is low.")
+            if brightness < 35:
+                issues.append("Photo is too dark.")
+            if brightness > 235:
+                issues.append("Photo is overexposed.")
+            return {"ok": not issues, "width": w, "height": h, "brightness": round(brightness), "issues": issues}
     except Exception:
-        return {"ok":False,"width":0,"height":0,"brightness":0,"issues":["Unsupported or unreadable image."]}
+        return {"ok": False, "width": 0, "height": 0, "brightness": 0, "issues": ["Unsupported or unreadable image."]}
+
 
 def risk(crop, age, irrigation, humidity, rainfall, temp, soil):
-    score=20; reasons=[]
+    score = 20
+    reasons = []
     if humidity is not None:
-        if humidity>=80: score+=22; reasons.append("Very high humidity")
-        elif humidity>=65: score+=12; reasons.append("Elevated humidity")
+        if humidity >= 80:
+            score += 22; reasons.append("बहुत अधिक नमी / Very high humidity")
+        elif humidity >= 65:
+            score += 12; reasons.append("नमी अपेक्षाकृत अधिक / Elevated humidity")
     if rainfall is not None:
-        if rainfall>=30: score+=18; reasons.append("High recent rainfall")
-        elif rainfall>=10: score+=9; reasons.append("Recent rainfall")
+        if rainfall >= 30:
+            score += 18; reasons.append("हाल की बारिश अधिक / High recent rainfall")
+        elif rainfall >= 10:
+            score += 9; reasons.append("हाल में बारिश हुई / Recent rainfall")
     if soil is not None:
-        if soil>=0.35: score+=16; reasons.append("High estimated soil moisture")
-        elif soil>=0.25: score+=8; reasons.append("Moderate estimated soil moisture")
-    if irrigation=="frequent": score+=8; reasons.append("Frequent irrigation")
-    if 20<=age<=60: score+=5; reasons.append("Susceptible crop stage")
-    if temp is not None and (temp>=35 or temp<=10): score+=8; reasons.append("Temperature stress")
-    score=min(95,score)
-    level="HIGH" if score>=70 else "MEDIUM" if score>=45 else "LOW"
-    data=DISEASES.get(crop,DISEASES.get("Tomato"))
-    disease=data["high"] if level=="HIGH" else data["medium"] if level=="MEDIUM" else "No major disease signal"
-    return score,level,disease,reasons,data.get("advice",[])
+        if soil >= 0.35:
+            score += 16; reasons.append("मिट्टी की अनुमानित नमी अधिक / High estimated soil moisture")
+        elif soil >= 0.25:
+            score += 8; reasons.append("मिट्टी की अनुमानित नमी मध्यम / Moderate estimated soil moisture")
+    if irrigation == "frequent":
+        score += 8; reasons.append("सिंचाई की अनुमानित जरूरत अधिक / Higher irrigation need")
+    if 20 <= age <= 60:
+        score += 5; reasons.append("फसल की अनुमानित अवस्था संवेदनशील हो सकती है / Susceptible crop stage")
+    if temp is not None and (temp >= 35 or temp <= 10):
+        score += 8; reasons.append("तापमान तनाव / Temperature stress")
+    score = min(95, score)
+    level = "HIGH" if score >= 70 else "MEDIUM" if score >= 45 else "LOW"
+    data = DISEASES.get(crop, DISEASES.get("Tomato", {"high": "Crop health concern", "medium": "Monitor crop", "advice": []}))
+    disease = data.get("high") if level == "HIGH" else data.get("medium") if level == "MEDIUM" else "No major disease signal"
+    return score, level, disease, reasons, data.get("advice", [])
+
+
+def context_from_location(lat, lon, crop="Tomato"):
+    weather = get_weather(lat, lon)
+    temp = weather.get("temperature")
+    humidity = weather.get("humidity")
+    rainfall = weather.get("rainfall", 0)
+    soil = estimate_soil(temp, humidity, rainfall, weather.get("soil_moisture"))
+    age = estimate_crop_age(crop)
+    irrigation = estimate_irrigation(temp, rainfall, soil, crop)
+    return weather, {
+        "temperature": temp if temp is not None else 28,
+        "humidity": humidity if humidity is not None else 65,
+        "rainfall": rainfall if rainfall is not None else 5,
+        "soil_moisture": soil,
+        "age": age,
+        "irrigation": irrigation,
+        "source": "Open-Meteo" if weather else "Estimated fallback"
+    }
+
 
 @app.route("/")
 def index():
     return render_template("index.html", crops=CROPS, month=month_name())
 
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        if username:
+            return redirect(url_for("index"))
+    return render_template("login.html")
+
+
+@app.route("/location-context")
+def location_context():
+    lat = request.args.get("lat", "").strip()
+    lon = request.args.get("lon", "").strip()
+    crop = request.args.get("crop", "Tomato")
+    weather, values = context_from_location(lat, lon, crop)
+    return jsonify({"weather": weather, **values})
+
+
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    crop=request.form.get("crop","Tomato")
-    age=int(request.form.get("age",30) or 30)
-    irrigation=request.form.get("irrigation","normal")
-    lat=request.form.get("latitude","").strip()
-    lon=request.form.get("longitude","").strip()
+    crop = request.form.get("crop", "Tomato")
+    lat = request.form.get("latitude", "").strip()
+    lon = request.form.get("longitude", "").strip()
 
-    weather=get_weather(lat,lon)
-    humidity=weather.get("humidity")
-    rainfall=weather.get("rainfall")
-    temp=weather.get("temperature")
-    soil=weather.get("soil_moisture")
+    weather, values = context_from_location(lat, lon, crop)
+    age = values["age"]
+    irrigation = values["irrigation"]
+    temp = values["temperature"]
+    humidity = values["humidity"]
+    rainfall = values["rainfall"]
+    soil = values["soil_moisture"]
 
-    # Manual fallback when location/weather is unavailable
-    if humidity is None: humidity=int(request.form.get("humidity",65) or 65)
-    if rainfall is None: rainfall=float(request.form.get("rainfall",5) or 5)
-    if temp is None: temp=float(request.form.get("temperature",28) or 28)
-    if soil is None:
-        manual=float(request.form.get("moisture",50) or 50)
-        soil=manual/100.0
-
-    image_name=None; quality=None
-    image=request.files.get("image")
+    image_name = None
+    quality = None
+    image = request.files.get("image")
     if image and image.filename:
-        filename=secure_filename(image.filename)
+        filename = secure_filename(image.filename)
         if filename:
-            image_name=filename
-            path=os.path.join(app.config["UPLOAD_FOLDER"],filename)
+            image_name = filename
+            path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
             image.save(path)
-            quality=image_quality(path)
+            quality = image_quality(path)
 
-    score,level,disease,reasons,advice=risk(crop,age,irrigation,humidity,rainfall,temp,soil)
-    recommendations=crop_recommendations(temp,rainfall,month_name())
+    score, level, disease, reasons, advice = risk(crop, age, irrigation, humidity, rainfall, temp, soil)
+    recommendations = crop_recommendations(temp, rainfall, month_name())
 
-    # Deliberately do not claim AI confidence until a trained CV model is connected.
-    ai_status="AI vision model ready for integration"
-    ai_confidence="Pending trained crop-disease model"
-    ai_note="This prototype uses field, weather and image-quality signals. It does not diagnose from pixels yet."
+    ai_status = "AI vision model ready for integration"
+    ai_confidence = "Pending trained crop-disease model"
+    ai_note = "यह प्रोटोटाइप अभी मौसम, खेत के संकेत और फोटो-क्वालिटी को जोड़ता है; फोटो के pixels से बीमारी की पुष्टि करने वाला trained model अभी जोड़ा जाना बाकी है।"
 
-    con=db()
+    con = db()
     con.execute("""INSERT INTO history
     (created_at,crop,disease,risk,severity,confidence,latitude,longitude,temperature,humidity,rainfall,soil_moisture,image_name)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-    (datetime.now().strftime("%Y-%m-%d %H:%M"),crop,disease,score,level,ai_confidence,
-     lat,lon,str(temp),str(humidity),str(rainfall),str(round(soil*100,1)),image_name))
+    (datetime.now().strftime("%Y-%m-%d %H:%M"), crop, disease, score, level, ai_confidence,
+     lat, lon, str(temp), str(humidity), str(rainfall), str(round(soil * 100, 1)), image_name))
     con.commit(); con.close()
 
     return render_template("result.html", crop=crop, score=score, level=level,
-        disease=disease,reasons=reasons,advice=advice,image_name=image_name,
-        quality=quality,weather=weather,temperature=temp,humidity=humidity,
-        rainfall=rainfall,soil_moisture=soil,recommendations=recommendations,
-        latitude=lat,longitude=lon,ai_status=ai_status,ai_confidence=ai_confidence,ai_note=ai_note)
+        disease=disease, reasons=reasons, advice=advice, image_name=image_name,
+        quality=quality, weather=weather, temperature=temp, humidity=humidity,
+        rainfall=rainfall, soil_moisture=soil, recommendations=recommendations,
+        latitude=lat, longitude=lon, age=age, irrigation=irrigation,
+        ai_status=ai_status, ai_confidence=ai_confidence, ai_note=ai_note)
+
 
 @app.route("/history")
 def history():
-    con=db(); rows=con.execute("SELECT * FROM history ORDER BY id DESC LIMIT 50").fetchall()
-    con.close()
+    con = db(); rows = con.execute("SELECT * FROM history ORDER BY id DESC LIMIT 50").fetchall(); con.close()
     return render_template("history.html", rows=rows)
+
 
 @app.route("/api/crops")
 def api_crops():
     return jsonify(CROPS)
 
+
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.get_json(silent=True) or {}
+    message = (data.get("message") or "").strip().lower()
+    ctx = data.get("context") or {}
+    crop = ctx.get("crop", "आपकी फसल")
+    temp = ctx.get("temperature", "-")
+    humidity = ctx.get("humidity", "-")
+    rain = ctx.get("rainfall", "-")
+    soil = ctx.get("soil_moisture", "-")
+    risk_level = ctx.get("risk", "-")
+    disease = ctx.get("disease", "अभी निश्चित नहीं")
+
+    if any(k in message for k in ["बीमारी", "रोग", "disease", "problem", "पत्ता"]):
+        reply = f"अभी {crop} के लिए संभावित संकेत: {disease}। इसे पक्की बीमारी की पहचान न मानें; साफ फोटो और कृषि विशेषज्ञ की पुष्टि बेहतर रहेगी।"
+    elif any(k in message for k in ["मौसम", "weather", "बारिश", "rain", "temperature", "तापमान"]):
+        reply = f"आपके खेत के लिए अभी तापमान लगभग {temp}°C, नमी {humidity}% और आज की बारिश {rain} mm है।"
+    elif any(k in message for k in ["नमी", "moisture", "soil", "मिट्टी"]):
+        reply = f"मिट्टी की अनुमानित नमी {soil}% है। यह satellite/weather-model estimate है, field sensor की exact reading नहीं।"
+    elif any(k in message for k in ["जोखिम", "risk", "खतरा"]):
+        reply = f"अभी {crop} का field risk {risk_level} है। मौसम और मिट्टी के संकेत बदलने पर risk भी बदल सकता है।"
+    elif any(k in message for k in ["दवा", "pesticide", "कीटनाशक", "इलाज", "treatment"]):
+        reply = "दवा का चुनाव सही रोग की पुष्टि, फसल और स्थानीय label/कृषि सलाह के अनुसार होना चाहिए। गलत दवा या गलत उपयोग से नुकसान हो सकता है।"
+    elif any(k in message for k in ["सिंचाई", "irrigation", "पानी"]):
+        reply = "सिंचाई की जरूरत मौसम और मिट्टी की अनुमानित नमी से तय करने में मदद मिल सकती है। इस prototype में यह एक अनुमान है, आपकी वास्तविक सिंचाई का रिकॉर्ड नहीं।"
+    else:
+        reply = f"मैं {crop} की स्थिति समझने में मदद कर सकता हूँ। आप मौसम, बीमारी, मिट्टी की नमी, सिंचाई या जोखिम के बारे में पूछ सकते हैं।"
+
+    return jsonify({"reply": reply})
+
+
 init_db()
 
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(debug=True)
